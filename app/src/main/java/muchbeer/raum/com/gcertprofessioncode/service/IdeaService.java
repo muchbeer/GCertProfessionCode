@@ -23,12 +23,12 @@ public interface IdeaService {
     /*Header to be sent to the server will be as follow
    x-device-type: Android
     Accept-Language: EN*/
-    @Headers("x-device-type: Android")
-    @GET("ideas")
+   // @Headers("x-device-type: Android")
+    //@GET("ideas")
     //Call<List<RetroIdea>> getIdeas(@QueryMap HashMap<String, String> filters);
-    Call<List<RetroIdea>> getIdeas(@Header("Accept-Language") String language);
-   /* @GET("ideas")
-    Call<List<RetroIdea>> getIdeas(@QueryMap HashMap<String, String> owner);*/
+    //Call<List<RetroIdea>> getIdeas(@Header("Accept-Language") String language);
+   @GET("ideas")
+    Call<List<RetroIdea>> getIdeas(@QueryMap HashMap<String, String> owner);
 
     @GET("ideas/{id}")
     Call<RetroIdea> getIdea(@Path("id")int id);

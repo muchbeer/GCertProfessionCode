@@ -1,6 +1,15 @@
 package muchbeer.raum.com.gcertprofessioncode.service;
 
+import android.os.Build;
+
+import java.io.IOException;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -16,7 +25,24 @@ public class ServiceBuilder {
 
     // Create OkHttp Client
     public static OkHttpClient.Builder okHttp =
-                        new OkHttpClient.Builder().addInterceptor(logger);
+                        new OkHttpClient.Builder()
+                                .readTimeout(15, TimeUnit.SECONDS)
+                                .addInterceptor(new Interceptor() {
+                            @Override
+                            public Response intercept(Chain chain) throws IOException {
+
+                                Request request = chain.request();
+                                request = request.newBuilder()
+                                        .addHeader("x-device-type", Build.DEVICE)
+                                        .addHeader("Accept-Language", Locale.getDefault().getLanguage())
+                                        .build();
+
+                                return chain.proceed(request);
+
+                            }
+                        })
+
+                         .addInterceptor(logger);
 
 
 /*    public WebServiceClient() {
