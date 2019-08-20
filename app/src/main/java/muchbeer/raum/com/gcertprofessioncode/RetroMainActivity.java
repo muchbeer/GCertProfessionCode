@@ -119,6 +119,7 @@ public class RetroMainActivity extends AppCompatActivity {
                 try {
                     messages = call.execute().body();
                 }catch (Exception e) {
+                    //nice
 
                 }
 
