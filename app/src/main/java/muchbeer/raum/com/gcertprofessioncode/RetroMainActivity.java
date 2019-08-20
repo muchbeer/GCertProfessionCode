@@ -51,8 +51,8 @@ public class RetroMainActivity extends AppCompatActivity {
 
 
         IdeaService taskService = ServiceBuilder.buildService(IdeaService.class);
-        Call<List<RetroIdea>> retrievIdeas = taskService.getIdeas(filters);
-
+       // Call<List<RetroIdea>> retrievIdeas = taskService.getIdeas(filters);
+        Call<List<RetroIdea>> retrievIdeas = taskService.getIdeas("EN");
         retrievIdeas.enqueue(new Callback<List<RetroIdea>>() {
             @Override
             public void onResponse(Call<List<RetroIdea>> call, Response<List<RetroIdea>> response) {

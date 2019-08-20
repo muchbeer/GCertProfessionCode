@@ -125,7 +125,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
                 android:backgroundTint="@color/colorPrimary"
-                android:text="Update"
+                android:text="Create"
                 android:textColor="@android:color/white"
                 android:layout_weight="1"
                 android:textStyle="bold" />

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import muchbeer.raum.com.gcertprofessioncode.R;
+import muchbeer.raum.com.gcertprofessioncode.RetroCreateIdeaActivity;
 import muchbeer.raum.com.gcertprofessioncode.RetroMainActivity;
 import muchbeer.raum.com.gcertprofessioncode.entities.RetroIdea;
 import muchbeer.raum.com.gcertprofessioncode.service.IdeaService;
@@ -35,6 +37,7 @@ public class IdeaDetailFragment extends Fragment {
     private RetroIdea mItem;
 
     public IdeaDetailFragment() {
+
     }
 
     @Override
@@ -49,6 +52,7 @@ public class IdeaDetailFragment extends Fragment {
 
         final Context context = getContext();
 
+        IdeaService requestRetroConn = ServiceBuilder.buildService(IdeaService.class);
         Button updateIdea = (Button) rootView.findViewById(R.id.idea_update);
         Button deleteIdea = (Button) rootView.findViewById(R.id.idea_delete);
 
@@ -94,7 +98,7 @@ public class IdeaDetailFragment extends Fragment {
         updateIdea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RetroIdea newIdea = new RetroIdea();
+           //     RetroIdea newIdea = new RetroIdea();
                /* newIdea.setId(getArguments().getInt(ARG_ITEM_ID));
                 newIdea.setName(ideaName.getText().toString());
                 newIdea.setDescription(ideaDescription.getText().toString());
@@ -102,6 +106,30 @@ public class IdeaDetailFragment extends Fragment {
                 newIdea.setOwner(ideaOwner.getText().toString());*/
 
                 //SampleContent.updateIdea(newIdea);
+
+
+                Call<RetroIdea> callUpdate = requestRetroConn.updateIdea(
+                        getArguments().getInt(ARG_ITEM_ID),
+                        ideaName.getText().toString(),
+                        ideaDescription.getText().toString(),
+                        ideaStatus.getText().toString(),
+                        ideaOwner.getText().toString()
+                );
+
+                callUpdate.enqueue(new Callback<RetroIdea>() {
+                    @Override
+                    public void onResponse(Call<RetroIdea> call, Response<RetroIdea> response) {
+                        Intent intent = new Intent(context, RetroMainActivity.class);
+                        startActivity(intent);
+                        Toast.makeText(getActivity(), "Update Successful", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<RetroIdea> call, Throwable t) {
+                        Log.d(LOG_TAG, "The error message is : "+ t.getMessage());
+                    }
+                });
+
                 Intent intent = new Intent(getContext(), RetroMainActivity.class);
                 startActivity(intent);
             }
@@ -111,8 +139,24 @@ public class IdeaDetailFragment extends Fragment {
             @Override
             public void onClick(View view) {
              //   SampleContent.deleteIdea(getArguments().getInt(ARG_ITEM_ID));
-                Intent intent = new Intent(getContext(), RetroMainActivity.class);
-                startActivity(intent);
+
+                Call<RetroIdea> deleteRetroIdea = requestRetroConn.deleteIdea(getArguments().getInt(ARG_ITEM_ID));
+
+                deleteRetroIdea.enqueue(new Callback<RetroIdea>() {
+                    @Override
+                    public void onResponse(Call<RetroIdea> call, Response<RetroIdea> response) {
+                        Intent intent = new Intent(getContext(), RetroMainActivity.class);
+                        startActivity(intent);
+                        Toast.makeText(getActivity(), "Delete Successful", Toast.LENGTH_LONG).show();
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<RetroIdea> call, Throwable t) {
+                        Log.d(LOG_TAG, "The error message is : "+ t.getMessage());
+                    }
+                });
+
             }
         });
 
